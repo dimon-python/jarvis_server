@@ -18,8 +18,10 @@ public class ClientHandler extends Thread{
             out = new PrintWriter(socket.getOutputStream(), true);
             Main.setClients(this);
 
-            message = in.readLine();
-            System.out.println(message);
+            while (true) {
+                message = in.readLine();
+                System.out.println(message);
+            }
 
         } catch(IOException e){
 
