@@ -3,9 +3,9 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread{
     private Socket socket;
-    private PrintWriter out;
+    private static PrintWriter out;
     private BufferedReader in;
-    private String message;
+    private static String message;
     //private Boolean running = true;
 
     public ClientHandler(Socket socket){
@@ -26,5 +26,9 @@ public class ClientHandler extends Thread{
         } catch(IOException e){
 
         }
+    }
+
+    static void sendMessage(String message){
+        out.println(ClientHandler.message);
     }
 }

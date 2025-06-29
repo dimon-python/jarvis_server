@@ -19,4 +19,17 @@ public class Main {
             }
         }
     }
+
+    private static void broadcast(String message) {
+        System.out.println(message);
+        synchronized (clients) {
+            for (ClientHandler client : clients) {
+                try {
+                    client.sendMessage(message);
+                } catch (Exception e) {
+                    System.out.println("Не удалось отправить сообщение клиенту");
+                }
+            }
+        }
+    }
 }
