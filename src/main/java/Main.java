@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Main {
     private static final int PORT = 12345;
-    private static Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
+    static Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
 
     public static void setClients(ClientHandler client){
         clients.add(client);
@@ -16,19 +16,6 @@ public class Main {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             while (true) {
                 new ClientHandler(serverSocket.accept()).start();
-            }
-        }
-    }
-
-    private static void broadcast(String message) {
-        System.out.println(message);
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
-                try {
-                    client.sendMessage(message);
-                } catch (Exception e) {
-                    System.out.println("Не удалось отправить сообщение клиенту");
-                }
             }
         }
     }

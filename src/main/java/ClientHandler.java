@@ -20,7 +20,9 @@ public class ClientHandler extends Thread{
 
             while (true) {
                 message = in.readLine();
-                System.out.println(message);
+                if (message != null){
+                    broadcast(message);
+                }
             }
 
         } catch(IOException e){
@@ -30,5 +32,18 @@ public class ClientHandler extends Thread{
 
     static void sendMessage(String message){
         out.println(ClientHandler.message);
+    }
+
+    public static void broadcast(String message) {
+        System.out.println(message);
+        synchronized (Main.clients) {
+            for (ClientHandler client : Main.clients) {
+                try {
+                    client.sendMessage(message);
+                } catch (Exception e) {
+                    System.out.println("Не удалось отправить сообщение клиенту");
+                }
+            }
+        }
     }
 }
