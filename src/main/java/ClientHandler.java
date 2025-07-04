@@ -3,9 +3,9 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread{
     private Socket socket;
-    private static PrintWriter out;
+    private PrintWriter out;
     private BufferedReader in;
-    private static String message;
+    private String message;
     //private Boolean running = true;
 
     public ClientHandler(Socket socket){
@@ -18,20 +18,25 @@ public class ClientHandler extends Thread{
             out = new PrintWriter(socket.getOutputStream(), true);
             Main.setClients(this);
 
-            while (true) {
-                message = in.readLine();
-                if (message != null){
-                    broadcast(message);
-                }
+            while ((message = in.readLine()) != null) {  // Читаем, пока клиент не отключится
+                broadcast(message);
             }
-
         } catch(IOException e){
+            System.out.println("клиент отключился");
 
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                System.out.println("Ошибка при закрытии сокета: " + e.getMessage());
+            }
+            Main.clients.remove(this);  // Удаляем клиента из списка
         }
+
     }
 
-    static void sendMessage(String message){
-        out.println(ClientHandler.message);
+    void sendMessage(String message){
+        out.println(message);
     }
 
     public static void broadcast(String message) {
